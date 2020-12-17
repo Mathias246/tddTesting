@@ -29,131 +29,131 @@ class FunctionalTest(StaticLiveServerTestCase):
                     raise e
                 time.sleep(.5)
 
-class newVisitorTest(StaticLiveServerTestCase):
-    def test_can_start_a_list_for_one_user(self):
-        # Edith has heard about a cool new online to-do app. she goes
-        # to check out its homepage
-        self.browser.get(self.live_server_url)
+# class newVisitorTest(StaticLiveServerTestCase):
+#     def test_can_start_a_list_for_one_user(self):
+#         # Edith has heard about a cool new online to-do app. she goes
+#         # to check out its homepage
+#         self.browser.get(self.live_server_url)
 
-        # she notices the page title and header mention to-do lists
-        self.assertIn('To-Do', self.browser.title)
-        header_text = self.browser.find_element_by_tag_name('h1').text
-        self.assertIn('Start a new To-Do list', header_text)
+#         # she notices the page title and header mention to-do lists
+#         self.assertIn('To-Do', self.browser.title)
+#         header_text = self.browser.find_element_by_tag_name('h1').text
+#         self.assertIn('Start a new To-Do list', header_text)
 
-        # She is invited to enter a to-do item strait away
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertEqual(
-            inputbox.get_attribute('placeholder'),
-            'Enter a to-do item'
-        )
+#         # She is invited to enter a to-do item strait away
+#         inputbox = self.browser.find_element_by_id('id_new_item')
+#         self.assertEqual(
+#             inputbox.get_attribute('placeholder'),
+#             'Enter a to-do item'
+#         )
 
-        # she types "buy peacock feathers" into a text box (ediths hobby is tying fly-fishing lures)
-        inputbox.send_keys('Buy peacock feathers')
+#         # she types "buy peacock feathers" into a text box (ediths hobby is tying fly-fishing lures)
+#         inputbox.send_keys('Buy peacock feathers')
 
-        # When she hits enter, the page updates, and now the page lists "1: buy peacock feathers" as an item in a to-do list
-        inputbox.send_keys(Keys.ENTER)
+#         # When she hits enter, the page updates, and now the page lists "1: buy peacock feathers" as an item in a to-do list
+#         inputbox.send_keys(Keys.ENTER)
 
-        self.wait_for_row_in_list_table('1: Buy peacock feathers')
+#         self.wait_for_row_in_list_table('1: Buy peacock feathers')
 
-        # There is still a text box inviting her to add another item. She enters "use peacock feather to make a fly" (edith is very methodical)
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        inputbox.send_keys('Use peacock feathers to make a fly')
-        inputbox.send_keys(Keys.ENTER)
+#         # There is still a text box inviting her to add another item. She enters "use peacock feather to make a fly" (edith is very methodical)
+#         inputbox = self.browser.find_element_by_id('id_new_item')
+#         inputbox.send_keys('Use peacock feathers to make a fly')
+#         inputbox.send_keys(Keys.ENTER)
 
-        # the page updates again, and now shows both items on her list
-        self.wait_for_row_in_list_table('2: Use peacock feathers to make a fly')
-        self.wait_for_row_in_list_table('1: Buy peacock feathers')
+#         # the page updates again, and now shows both items on her list
+#         self.wait_for_row_in_list_table('2: Use peacock feathers to make a fly')
+#         self.wait_for_row_in_list_table('1: Buy peacock feathers')
 
-        # Edith wonder wether the site will remember her list. then she sees that the site has generated a unique
-        # URL for her -- there is some explanatory text to that effect
+#         # Edith wonder wether the site will remember her list. then she sees that the site has generated a unique
+#         # URL for her -- there is some explanatory text to that effect
 
-        # she visits that url - her to-do list is still there
+#         # she visits that url - her to-do list is still there
 
-        # satisfied, she goes back to sleep
+#         # satisfied, she goes back to sleep
 
-    def test_multiple_users_can_start_lists_at_different_urls(self):
-        # Edith starts a new to-do list
-        self.browser.get(self.live_server_url)
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        inputbox.send_keys('Buy peacock feathers')
-        inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: Buy peacock feathers')
+#     def test_multiple_users_can_start_lists_at_different_urls(self):
+#         # Edith starts a new to-do list
+#         self.browser.get(self.live_server_url)
+#         inputbox = self.browser.find_element_by_id('id_new_item')
+#         inputbox.send_keys('Buy peacock feathers')
+#         inputbox.send_keys(Keys.ENTER)
+#         self.wait_for_row_in_list_table('1: Buy peacock feathers')
 
-        # She notices that her list has a unique URL
-        edith_list_url = self.browser.current_url
-        self.assertRegex(edith_list_url, '/lists/.+')
+#         # She notices that her list has a unique URL
+#         edith_list_url = self.browser.current_url
+#         self.assertRegex(edith_list_url, '/lists/.+')
 
-        # now a new user, francis, comes along to the site.
+#         # now a new user, francis, comes along to the site.
 
-        ##we use a new browser session to make sure that no information
-        ## of edith's is coming through from cookies etc
+#         ##we use a new browser session to make sure that no information
+#         ## of edith's is coming through from cookies etc
 
-        self.browser.quit()
-        self.browser = webdriver.Firefox()
+#         self.browser.quit()
+#         self.browser = webdriver.Firefox()
 
-        # francis visits the home page. there is no sign of edith's list
+#         # francis visits the home page. there is no sign of edith's list
 
-        self.browser.get(self.live_server_url)
-        page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('Buy peacock feathers', page_text)
-        self.assertNotIn('make a fly', page_text)
+#         self.browser.get(self.live_server_url)
+#         page_text = self.browser.find_element_by_tag_name('body').text
+#         self.assertNotIn('Buy peacock feathers', page_text)
+#         self.assertNotIn('make a fly', page_text)
 
-        # francis starts a new list by entering a new item. he is less interesting than edith
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        inputbox.send_keys('Buy Milk')
-        inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: Buy Milk')
+#         # francis starts a new list by entering a new item. he is less interesting than edith
+#         inputbox = self.browser.find_element_by_id('id_new_item')
+#         inputbox.send_keys('Buy Milk')
+#         inputbox.send_keys(Keys.ENTER)
+#         self.wait_for_row_in_list_table('1: Buy Milk')
 
-        # francis get his own unique URL
-        francis_list_url = self.browser.current_url
-        self.assertRegex(francis_list_url, '/lists/.+')
-        self.assertNotEqual(francis_list_url, edith_list_url)
+#         # francis get his own unique URL
+#         francis_list_url = self.browser.current_url
+#         self.assertRegex(francis_list_url, '/lists/.+')
+#         self.assertNotEqual(francis_list_url, edith_list_url)
 
-        # again there is no trace of edith's list
-        page_text = self.browser.find_element_by_tag_name('body').text
-        self.assertNotIn('Buy peacock feathers', page_text)
-        self.assertIn('Buy Milk', page_text)
+#         # again there is no trace of edith's list
+#         page_text = self.browser.find_element_by_tag_name('body').text
+#         self.assertNotIn('Buy peacock feathers', page_text)
+#         self.assertIn('Buy Milk', page_text)
 
-        # satisfied, they both go back to sleep
+#         # satisfied, they both go back to sleep
 
-class LayoutAndStylingTest(FunctionalTest):
-    def test_layout_and_styling(self):
-        # Edith goes to home page
-        self.browser.get(self.live_server_url)
-        self.browser.set_window_size(1024, 768)
+# class LayoutAndStylingTest(FunctionalTest):
+#     def test_layout_and_styling(self):
+#         # Edith goes to home page
+#         self.browser.get(self.live_server_url)
+#         self.browser.set_window_size(1024, 768)
 
-        # She notices the input box is nicely centered
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=10
-        )
+#         # She notices the input box is nicely centered
+#         inputbox = self.browser.find_element_by_id('id_new_item')
+#         self.assertAlmostEqual(
+#             inputbox.location['x'] + inputbox.size['width'] / 2,
+#             512,
+#             delta=10
+#         )
 
-        # She starts a new list and sees the input is nicely centered there too
-        inputbox.send_keys('testing')
-        inputbox.send_keys(Keys.ENTER)
-        self.wait_for_row_in_list_table('1: testing')
-        inputbox = self.browser.find_element_by_id('id_new_item')
-        self.assertAlmostEqual(
-            inputbox.location['x'] + inputbox.size['width'] / 2,
-            512,
-            delta=10
-        )
+#         # She starts a new list and sees the input is nicely centered there too
+#         inputbox.send_keys('testing')
+#         inputbox.send_keys(Keys.ENTER)
+#         self.wait_for_row_in_list_table('1: testing')
+#         inputbox = self.browser.find_element_by_id('id_new_item')
+#         self.assertAlmostEqual(
+#             inputbox.location['x'] + inputbox.size['width'] / 2,
+#             512,
+#             delta=10
+#         )
 
-class ItemValidationTest(FunctionalTest):
-    @skip
-    def test_cannot_add_empty_list_items(self):
-        # Edith goes to the home page and accidentally tries to submit an empty list item
-        # She hits enter on the empty input box
+# class ItemValidationTest(FunctionalTest):
+#     @skip
+#     def test_cannot_add_empty_list_items(self):
+#         # Edith goes to the home page and accidentally tries to submit an empty list item
+#         # She hits enter on the empty input box
 
-        # The home page refreshes, and there is an error message saying that list items cannot be blank
+#         # The home page refreshes, and there is an error message saying that list items cannot be blank
 
-        # She tries again with some text for the  item, which now works
+#         # She tries again with some text for the  item, which now works
 
-        # Perversely, she now decides to submit a second blank list item
+#         # Perversely, she now decides to submit a second blank list item
 
-        # She recieves a similar warning on the list page
+#         # She recieves a similar warning on the list page
 
-        # And she can correct it by filling some text in
-        self.fail('write me!')
+#         # And she can correct it by filling some text in
+#         self.fail('write me!')
