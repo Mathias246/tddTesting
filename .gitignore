@@ -3,3 +3,4 @@ geckodriver.log
 lecturevenv
 __pycache__
 *.pyc
+/static
