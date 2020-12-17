@@ -125,7 +125,7 @@ class newVisitorTest(LiveServerTestCase):
         self.assertAlmostEqual(
             inputbox.location['x'] + inputbox.size['width'] / 2,
             512,
-            delta=450
+            delta=10
         )
 
         # She starts a new list and sees the input is nicely centered there too
